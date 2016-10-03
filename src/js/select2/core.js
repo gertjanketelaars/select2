@@ -316,11 +316,11 @@ define([
       });
     });
 
-    this.on('open_with_value', function (evt) {
+    this.on('open_with_value', function (key) {
       // Set value
-      self.dropdown.$search.val(evt.key);
+      self.dropdown.$search.val(key);
       // Trigger query, open dropdown and show results
-      self.trigger('query', { term: evt.key });
+      self.trigger('query', { term: key });
       // Prosition cursor at end of search field
       self.dropdown.$search.trigger('position_cursor');
     });
@@ -359,7 +359,8 @@ define([
           evt.preventDefault();
         } else if (self.dropdown.$search && key > 31 &&
             !evt.altKey && !evt.metaKey && !evt.ctrlKey ) {
-          self.trigger('open_with_value', evt);
+          // Open dropdown with character (or character of keycode as fallback)
+          self.trigger('open_with_value', (evt.key || String.fromCharCode(key)));
 
           evt.preventDefault();
         }

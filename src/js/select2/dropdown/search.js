@@ -28,6 +28,18 @@ define([
 
     decorated.call(this, container, $container);
 
+    // Position cursor at end search field
+    this.$search.on('position_cursor', function () {
+      if (this.createTextRange) {
+        var range = this.createTextRange();
+        range.collapse(false);
+        range.select();
+      } else if (this.setSelectionRange) {
+        var len = $(this).val().length;
+        this.setSelectionRange(len, len);
+      }
+    });
+
     this.$search.on('keydown', function (evt) {
       self.trigger('keypress', evt);
 

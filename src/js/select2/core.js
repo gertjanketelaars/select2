@@ -316,6 +316,15 @@ define([
       });
     });
 
+    this.on('open_with_value', function (evt) {
+      // Set value
+      self.dropdown.$search.val(evt.key);
+      // Trigger query, open dropdown and show results
+      self.trigger('query', { term: evt.key });
+      // Prosition cursor at end of search field
+      self.dropdown.$search.trigger('position_cursor');
+    });
+
     this.on('keypress', function (evt) {
       var key = evt.which;
 
@@ -344,8 +353,13 @@ define([
         }
       } else {
         if (key === KEYS.ENTER || key === KEYS.SPACE ||
-            (key === KEYS.DOWN && evt.altKey)) {
+            key === KEYS.DOWN || key === KEYS.UP) {
           self.open();
+
+          evt.preventDefault();
+        } else if (self.dropdown.$search && key > 31 &&
+            !evt.altKey && !evt.metaKey && !evt.ctrlKey ) {
+          self.trigger('open_with_value', evt);
 
           evt.preventDefault();
         }
